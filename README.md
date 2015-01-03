@@ -1,4 +1,4 @@
-# ambient-launchpad-apps
+# sprite-assembly
 
 A Clojure library designed to ... well, that part is up to you.
 

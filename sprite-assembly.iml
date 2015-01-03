@@ -14,7 +14,13 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
+    <orderEntry type="library" name="Leiningen: environ:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.6.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/math.combinatorics:0.0.8" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.3" level="project" />
+    <orderEntry type="library" name="Leiningen: overtone/osc-clj:0.8.1" level="project" />
+    <orderEntry type="library" name="Leiningen: commons-net:3.0.1" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojars.technomancy/jmdns:3.2.1" level="project" />
+    <orderEntry type="library" name="Leiningen: overtone/at-at:1.0.0" level="project" />
   </component>
 </module>
