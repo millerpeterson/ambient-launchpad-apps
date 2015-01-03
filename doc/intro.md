@@ -1,3 +1,3 @@
-# Introduction to ambient-launchpad-apps
+# Introduction to sprite-assembly
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
