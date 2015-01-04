@@ -14,12 +14,21 @@
   "Possible sprite led positions."
   (combo/cartesian-product (range nrows) (range ncols)))
 
-(defn fill
-  "Create a sprite according to a fill function."
-  [fill-fn]
-  (reduce #(assoc %1 %2 (fill-fn %2)) {} positions))
+(defn rect-region
+  "Led positions in a rectangular region."
+  [row-start col-start width height]
+  (filter (fn [[r c]] (and (>= r row-start)
+                           (<= r (+ row-start (- width 1)))
+                           (>= c col-start)
+                           (<= c (+ col-start (- height 1)))))
+          positions))
+
+(defn gen
+  "Create a new sprite according to a function."
+  [gen-fn]
+  (reduce #(assoc %1 %2 (gen-fn %2)) {} positions))
 
 (defn blank
   "Empty sprite."
   []
-  (fill (fn [pos] (led/named :black))))
+  (gen (fn [_] (led/named :black))))
