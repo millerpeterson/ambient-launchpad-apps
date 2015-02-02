@@ -3,12 +3,6 @@
 
 (use 'overtone.osc)
 
-(defn client
-  ([host port]
-    (osc-client host port))
-  ([]
-    (osc-client "localhost" 1337)))
-
 (defn update-led
   [cli row col color]
   (let [[red green] color]
