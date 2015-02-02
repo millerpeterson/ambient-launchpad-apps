@@ -10,17 +10,19 @@
     (osc-client "localhost" 1337)))
 
 (defn update-led
-  [cli ^Integer row ^Integer col color]
-  (let [[^Integer red ^Intereger green] color]
-    (osc-send cli "/phi/launchpad/out/led" row col red green)))
+  [cli row col color]
+  (let [[red green] color]
+    (osc-send cli "launchpad/led"
+              (Integer. row) (Integer. col)
+              (Integer. red) (Integer. green))))
 
 (defn show
   [cli]
-  (osc-send cli "/phi/launchpad/out/render" (str 1)))
+  (osc-send cli "launchpad/render" (Integer. 1)))
 
 (defn brightness
   [value cli]
-  (osc-send cli "/phi/launchpad/brightness" (str value)))
+  (osc-send cli "launchpad/brightness" (Integer. value)))
 
 (defn draw
   [spr cli]
