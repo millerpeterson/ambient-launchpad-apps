@@ -6,6 +6,10 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [environ "1.0.0"]
                  [overtone/osc-clj "0.8.1"]
-                 [org.clojure/math.combinatorics "0.0.8"]]
+                 [org.clojure/math.combinatorics "0.0.8"]
+                 [clj-stacktrace "0.2.8"]]
+  :repl-options {:welcome (println "> Sprite Assembler")
+                 :init-ns sprite-assembly.user
+                 :caught clj-stacktrace.repl/pst+}
   :profiles {:dev {:plugins [[lein-environ "1.0.0"]]
                    :env {}}})
