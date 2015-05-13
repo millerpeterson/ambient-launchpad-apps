@@ -12,16 +12,16 @@
 
 (def positions
   "Possible sprite led positions."
-  (combo/cartesian-product (range nrows) (range ncols)))
+  (into #{} (combo/cartesian-product (range nrows) (range ncols))))
 
 (defn rect-region
   "Led positions in a rectangular region."
   [row-start col-start width height]
-  (filter (fn [[r c]] (and (>= r row-start)
-                           (<= r (+ row-start (- width 1)))
-                           (>= c col-start)
-                           (<= c (+ col-start (- height 1)))))
-          positions))
+  (into #{} (filter (fn [[r c]] (and (>= r row-start)
+                                     (<= r (+ row-start (- width 1)))
+                                     (>= c col-start)
+                                     (<= c (+ col-start (- height 1)))))
+                    positions)))
 
 (defn gen
   "Create a new sprite according to a function."

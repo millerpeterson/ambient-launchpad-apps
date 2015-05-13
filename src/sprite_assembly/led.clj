@@ -19,7 +19,6 @@
   "Possible led colors."
   (combo/cartesian-product (range r-depth)
                            (range g-depth)))
-
 (defn random
   "Choose a random color. Pass r-hold or g-hold to fix r/g."
   ([& {:keys [r-hold g-hold]
