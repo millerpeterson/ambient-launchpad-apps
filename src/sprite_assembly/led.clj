@@ -15,10 +15,21 @@
    :red   [3 0]
    :green [0 3]})
 
-(def palette
+(defn red
+  "Return the red component of a led."
+  [led]
+  (first led))
+
+(defn green
+  "Return the green component of a led."
+  [led]
+  (second led))
+
+(defn palette
   "Possible led colors."
-  (combo/cartesian-product (range r-depth)
-                           (range g-depth)))
+  []
+  (into #{} (combo/cartesian-product (range r-depth)
+                                     (range g-depth))))
 (defn random
   "Choose a random color. Pass r-hold or g-hold to fix r/g."
   ([& {:keys [r-hold g-hold]
