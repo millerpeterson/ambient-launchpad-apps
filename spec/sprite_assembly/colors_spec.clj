@@ -1,6 +1,6 @@
- (ns sprite-assembly.led-spec
+ (ns sprite-assembly.colors-spec
   (:require [speclj.core :refer :all]
-            [sprite-assembly.led :refer :all]))
+            [sprite-assembly.colors :refer :all]))
 
 (defn should-be-a-led
   [led]

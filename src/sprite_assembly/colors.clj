@@ -1,4 +1,4 @@
-(ns sprite-assembly.led
+(ns sprite-assembly.colors
   (require [clojure.math.combinatorics :as combo]))
 
 (def r-depth
@@ -16,14 +16,14 @@
    :green [0 3]})
 
 (defn red
-  "Return the red component of a led."
-  [led]
-  (first led))
+  "Return the red component of a color."
+  [color]
+  (first color))
 
 (defn green
-  "Return the green component of a led."
-  [led]
-  (second led))
+  "Return the green component of a color."
+  [color]
+  (second color))
 
 (defn palette
   "Possible led colors."
