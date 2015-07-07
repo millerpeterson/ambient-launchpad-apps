@@ -8,44 +8,36 @@
     [sprite-assembly.op :as sop]
     [sprite-assembly.led :as led]))
 
-(def ser (osc/server))
-(def cli (osc/client))
+;(def ser (osc/server))
+;(def cli (osc/client))
+;
+;(def init-model {:active-mode :draw
+;                 :sprite (spr/blank)})
+;
+;(defn model-agent (agent init-model))
+;
+;(defn change-mode!
+;  [new-mode model]
+;  (assoc model :active-mode new-mode)
+;
 
-(def model (ref {:active-mode :draw
-                 :sprite (spr/blank)}))
-
-(defn change-mode!
-  [new-mode]
-  (alter model
-         (fn [m] (assoc m :active-mode new-mode))))
-
-(def mode-change-buttons
-  {:assembly [0 4]
-   :frames [0 5]
-   :draw [0 6]
-   :palette [0 7]})
-
-(defn mode-change-handler
-  [[row col _]]
-  (cond (contains? (into #{} (vals mode-change-buttons)) [row col])
-        (change-mode! ((set/map-invert mode-change-buttons) [row col]))))
-
-(defn render-active-mode-indicator
-  []
-  (let [[r c] (mode-change-buttons (@model :active-mode))]
-    (render/update-led cli r c (led/named :green))))
-
-(def modes {:global {:handler mode-change-handler
-                     :renderer render-active-mode-indicator}})
-
-(defn raw-input-handler
-  [event]
-  (when (btn/press? event)
-    (dosync
-      (doseq [[_ mode] modes]
-        ((mode :handler) event)
-        ((mode :renderer)))
-      (render/show cli)
-      (println (:active-mode @model)))))
-
-(btn/handle-presses ser raw-input-handler)
+;
+;(defn render-active-mode-indicator
+;  []
+;  (let [[r c] (mode-change-buttons (@model :active-mode))]
+;    (render/update-led cli r c (led/named :green))))
+;
+;(def modes {:global {:handler mode-change-handler
+;                     :renderer render-active-mode-indicator}})
+;
+;(defn handle-input
+;  [model event]
+;  (when (btn/press? event)
+;    (doseq [[_ mode] modes]
+;      (let [updated-model ((mode :handler) event model)]
+;        ((mode :renderer) updated-model cli)))
+;    (render/show cli)
+;    updated-model))
+;
+;(btn/handle-presses ser (fn [event]
+;                          (send-off model-agent handle-input event)))
