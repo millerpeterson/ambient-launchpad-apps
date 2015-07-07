@@ -14,33 +14,39 @@
 (defn positions
   "Possible launchpad positions."
   []
-  (into #{} (combo/cartesian-product (range nrows) (range ncols))))
+  (into #{} (map vec (combo/cartesian-product (range nrows) (range ncols)))))
 
-(defn update-led
-  "Set a launchpad LED (buffered not shown until call to show)."
-  [[row col] [red green] cli]
+(defprotocol LaunchpadOutput
+  (clear-all [o] "Set all launchpad LED's to blank (buffered).")
+  (update-led [o pos color] "Set a launchpad LED (buffered not shown until call to show).")
+  (show [o] "Show all buffered LED updates.")
+  (brightness [o value] "Set launchpad brightness (0-127).")
+  (draw [o spr] "Draw a sprite on the launchpad."))
+
+(defrecord OscLaunchpadOutput
+  [cli]
+  LaunchpadOutput
+
+  (update-led
+    [_ [row col] [red green]]
     (tone/osc-send cli "lpad/led"
-              (Integer. row) (Integer. col)
-              (Integer. red) (Integer. green)))
+                   (Integer. row) (Integer. col)
+                   (Integer. red) (Integer. green)))
 
-(defn show
-  "Show all buffered LED updates."
-  [cli]
-  (tone/osc-send cli "lpad/show" (Integer. 1)))
+  (show
+    [_]
+    (tone/osc-send cli "lpad/show" (Integer. 1)))
 
-(defn brightness
-  "Set launchpad brightness (0-127)."
-  [value cli]
-  (tone/osc-send cli "lpad/brightness" (Integer. value)))
+  (brightness
+    [_ value]
+    (tone/osc-send cli "lpad/brightness" (Integer. value)))
 
-(defn draw
-  "Draw a sprite on the launchpad."
-  [spr cli]
-  (doseq [led-pos (keys spr)]
-    (update-led led-pos (get spr led-pos) cli)))
+  (clear-all
+    [this]
+    (doseq [led-pos (positions)]
+      (update-led this led-pos [0 0])))
 
-(defn clear
-  "Set all launchpad LED's to blank (buffered)."
-  [cli]
-  (doseq [led-pos (positions)]
-    (update-led led-pos [0 0] cli)))
+  (draw
+    [this spr]
+    (doseq [led-pos (keys spr)]
+      (update-led this led-pos (get spr led-pos)))))
