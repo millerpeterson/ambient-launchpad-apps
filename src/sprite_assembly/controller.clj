@@ -1,13 +1,13 @@
 (ns sprite-assembly.controller)
 
 (defprotocol ControlMode
-  (handle-event [event model] "Handle an incoming interaction event.")
-  (render [model cli] "Display the mode view."))
+  (handle-event [m event model] "Handle an incoming interaction event.")
+  (render [m model] "Display the mode view."))
 
-(deftype DummyMode
+(defrecord DummyMode
   []
   ControlMode
-  (handle-event [_ model] model)
+  (handle-event [_ _ model] model)
   (render [_ _]))
 
 (defn- global
