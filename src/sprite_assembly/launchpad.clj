@@ -1,7 +1,8 @@
 (ns sprite-assembly.launchpad
   (require
     [clojure.math.combinatorics :as combo]
-    [overtone.osc :as tone]))
+    [overtone.osc :as tone]
+    [sprite-assembly.osc :as osc]))
 
 (def nrows
   "Number of rows on the launchpad."
@@ -50,3 +51,7 @@
     [this spr]
     (doseq [led-pos (keys spr)]
       (update-led this led-pos (get spr led-pos)))))
+
+(defn client
+  []
+  (OscLaunchpadOutput. (osc/client)))

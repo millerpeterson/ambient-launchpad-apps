@@ -10,7 +10,7 @@
                  [clj-stacktrace "0.2.8"]
                  [speclj "3.3.0"]]
   :repl-options {:welcome (println "> Sprite Assembler")
-                 :init-ns sprite-assembly.user
+                 :init-ns sprite-assembly.core
                  :caught clj-stacktrace.repl/pst+}
   :profiles {:dev {:plugins [[lein-environ "1.0.0"]
                              [speclj "3.3.0"]]
