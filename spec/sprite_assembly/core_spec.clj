@@ -1,37 +1,43 @@
 (ns sprite-assembly.core-spec
   (require [speclj.core :refer :all]
+           [speclj.run.standard]
            [sprite-assembly.core :refer :all]
            [sprite-assembly.editor-model :as model]))
 
-(defn stubbed-controller
-  []
-  {:global {:handler (stub :global-handler)
-            :renderer (stub :global-renderer)}
-   :mode1 {:handler (stub :mode1-handler)
-           :renderer (stub :mode1-renderer)}
-   :mode2 {:handler (stub :mode2-handler)
-           :renderer (stub :mode2-renderer)}})
+(defn controller-mode
+  [mode-name func-gen]
+  {:handler (func-gen (keyword
+                        (str (name mode-name) "-handler")))
+   :renderer (func-gen (keyword
+                         (str (name mode-name) "-renderer")))})
 
 (defn dummy-controller
-  []
-  {:global {:handler :global-handler
-            :renderer :global-renderer}
-   :mode1 {:handler :mode1-handler
-           :renderer :mode1-renderer}
-   :mode2 {:handler :mode2-handler
-           :renderer :mode2-renderer}})
+  [modes]
+  (reduce (fn [controller mode-name]
+            (assoc controller mode-name (controller-mode mode-name #(keyword %))))
+          {}
+          modes))
+
+(defn stubbed-controller
+  [modes]
+  (reduce (fn [controller mode-name]
+            (assoc controller mode-name (controller-mode mode-name #(stub %))))
+          {}
+          modes))
+
+(defn app-with-controller
+  [controller]
+  {:model (model/build)
+   :controller controller
+   :lpad {}})
 
 (defn dummy-app
-  []
-  {:model (model/build)
-   :controller (dummy-controller)
-   :lpad {}})
+  [modes]
+  (app-with-controller (dummy-controller modes)))
 
 (defn stubbed-app
-  []
-  {:model (model/build)
-   :controller (stubbed-controller)
-   :lpad {}})
+  [modes]
+  (app-with-controller (stubbed-controller modes)))
 
 (defn should-be-an-app
   [a]
@@ -43,7 +49,7 @@
 (describe "handlers"
           (with-stubs)
           (it "returns the mode handlers"
-              (let [hs (handlers (dummy-app))]
+              (let [hs (handlers (dummy-app [:global :mode1 :mode2]))]
                 (should= 3 (count hs))
                 (should-contain :global-handler hs)
                 (should-contain :mode1-handler hs)
@@ -52,7 +58,7 @@
 (describe "renderers"
           (with-stubs)
           (it "returns the mode renderers"
-              (let [rs (renderers (dummy-app))]
+              (let [rs (renderers (dummy-app [:global :mode1 :mode2]))]
                 (should= 3 (count rs))
                 (should-contain :global-renderer rs)
                 (should-contain :mode1-renderer rs)
@@ -60,8 +66,8 @@
 
 (describe "handle-input!"
           (with-stubs)
-          (with event [4 2 1])
-          (with stubb-app (stubbed-app))
+          (with event [[4 2] 1])
+          (with stubb-app (stubbed-app [:global :mode1 :mode2]))
 
           (it "returns an app"
               (let [app-after-event-handled (handle-input! @event @stubb-app)]
@@ -79,3 +85,14 @@
                 (should-have-invoked :render!
                                      {:with [@stubb-app] :times 1}))))
 
+(describe "run-handlers"
+          (with-stubs)
+          (with event [[2 3] 1])
+          (with stub-app (stubbed-app [:global :mode1 :mode2]))
+          (with mutating-app)
+
+          (it "invokes all handlers"
+              (run-handlers @event @stub-app)
+              (should-have-invoked :global-renderer)
+              (should-have-invoked :mode1-handler)
+              (should-have-invoked :mode2-handler)))
