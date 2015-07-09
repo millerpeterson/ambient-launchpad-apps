@@ -6,24 +6,23 @@
 
 (defn controller-mode
   [mode-name func-gen]
-  {:handler (func-gen (keyword
-                        (str (name mode-name) "-handler")))
-   :renderer (func-gen (keyword
-                         (str (name mode-name) "-renderer")))})
+  {:handler (func-gen (keyword (str (name mode-name) "-handler")))
+   :renderer (func-gen (keyword (str (name mode-name) "-renderer")))})
+
+(defn controller
+  [modes func-gen]
+  (reduce (fn [controller mode-name]
+            (assoc controller mode-name (controller-mode mode-name func-gen)))
+          {}
+          modes))
 
 (defn dummy-controller
   [modes]
-  (reduce (fn [controller mode-name]
-            (assoc controller mode-name (controller-mode mode-name #(keyword %))))
-          {}
-          modes))
+  (controller modes #(keyword %)))
 
 (defn stubbed-controller
   [modes]
-  (reduce (fn [controller mode-name]
-            (assoc controller mode-name (controller-mode mode-name #(stub %))))
-          {}
-          modes))
+  (controller modes #(stub %)))
 
 (defn app-with-controller
   [controller]
@@ -89,10 +88,9 @@
           (with-stubs)
           (with event [[2 3] 1])
           (with stub-app (stubbed-app [:global :mode1 :mode2]))
-          (with mutating-app)
 
           (it "invokes all handlers"
               (run-handlers @event @stub-app)
-              (should-have-invoked :global-renderer)
+              (should-have-invoked :global-handler)
               (should-have-invoked :mode1-handler)
               (should-have-invoked :mode2-handler)))
