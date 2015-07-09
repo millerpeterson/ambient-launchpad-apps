@@ -14,7 +14,7 @@
   (reduce (fn [controller mode-name]
             (assoc controller mode-name (controller-mode mode-name func-gen)))
           {}
-          modes))
+          (concat [:global] modes)))
 
 (defn dummy-controller
   [modes]
@@ -48,7 +48,7 @@
 (describe "handlers"
           (with-stubs)
           (it "returns the mode handlers"
-              (let [hs (handlers (dummy-app [:global :mode1 :mode2]))]
+              (let [hs (handlers (dummy-app [:mode1 :mode2]))]
                 (should= 3 (count hs))
                 (should-contain :global-handler hs)
                 (should-contain :mode1-handler hs)
@@ -57,7 +57,7 @@
 (describe "renderers"
           (with-stubs)
           (it "returns the mode renderers"
-              (let [rs (renderers (dummy-app [:global :mode1 :mode2]))]
+              (let [rs (renderers (dummy-app [:mode1 :mode2]))]
                 (should= 3 (count rs))
                 (should-contain :global-renderer rs)
                 (should-contain :mode1-renderer rs)
@@ -66,7 +66,7 @@
 (describe "handle-input!"
           (with-stubs)
           (with event [[4 2] 1])
-          (with stubb-app (stubbed-app [:global :mode1 :mode2]))
+          (with stubb-app (stubbed-app [:mode1 :mode2]))
 
           (it "returns an app"
               (let [app-after-event-handled (handle-input! @event @stubb-app)]
@@ -87,7 +87,7 @@
 (describe "run-handlers"
           (with-stubs)
           (with event [[2 3] 1])
-          (with stub-app (stubbed-app [:global :mode1 :mode2]))
+          (with stub-app (stubbed-app [:mode1 :mode2]))
 
           (it "invokes all handlers"
               (run-handlers @event @stub-app)
