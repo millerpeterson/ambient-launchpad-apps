@@ -9,7 +9,6 @@
               (should (satisfies? ControlMode (@controller :global))))
 
           (it "builds draw, palette, frames, and assembly modes"
-              (doseq [mode [:draw :palette :frames :assembly]]
-                (should (contains? @controller :modes))
+              (doseq [mode [:global :draw :palette :frames :assembly]]
                 (should (satisfies? ControlMode
-                                    (get (@controller :modes) mode))))))
+                                    (get @controller mode))))))

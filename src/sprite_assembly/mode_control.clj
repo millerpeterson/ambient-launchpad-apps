@@ -19,6 +19,11 @@
   (let [[row col] position]
     ((set/map-invert mode-change-buttons) [row col])))
 
+(defn position-for-mode
+  "Mode-change button position that corresponds to a given mode."
+  [mode]
+  (get mode-change-buttons mode))
+
 (defn change-mode
   "Return a model with its mode changed to new-mode."
   [new-mode model]

@@ -1,6 +1,6 @@
 (ns sprite-assembly.op
   (require [sprite-assembly.sprite :as sprite]
-           [sprite-assembly.led :as led]))
+           [sprite-assembly.colors :as led]))
 
 (defn region-map
   "Map leds in a given region of a sprite."

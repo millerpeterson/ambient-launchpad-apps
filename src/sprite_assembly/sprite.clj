@@ -1,5 +1,5 @@
 (ns sprite-assembly.sprite
-  (require [sprite-assembly.led :as led]
+  (require [sprite-assembly.colors :as led]
            [clojure.math.combinatorics :as combo]))
 
 (def nrows
@@ -10,8 +10,9 @@
   "Number of cols."
   8)
 
-(def positions
+(defn positions
   "Possible sprite led positions."
+  []
   (into #{} (combo/cartesian-product (range nrows) (range ncols))))
 
 (defn rect-region
@@ -21,12 +22,12 @@
                                      (<= r (+ row-start (- width 1)))
                                      (>= c col-start)
                                      (<= c (+ col-start (- height 1)))))
-                    positions)))
+                    (positions))))
 
 (defn gen
   "Create a new sprite according to a function."
   [gen-fn]
-  (reduce #(assoc %1 %2 (gen-fn %2)) {} positions))
+  (reduce #(assoc %1 %2 (gen-fn %2)) {} (positions)))
 
 (defn blank
   "Empty sprite."

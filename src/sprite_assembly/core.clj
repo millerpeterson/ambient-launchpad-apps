@@ -7,22 +7,15 @@
                :controller (controller/build)
                :lpad (launchpad/client)}))
 
-(defn handlers
-  [app]
-  (map #(get % :handler)
-       (vals (get app :controller))))
-
-(defn renderers
-  [app]
-  (map #(get % :renderer)
-       (vals (get app :controller))))
+(defn render!
+  [app])
 
 (defn run-handlers
   [event app]
-  app)
-
-(defn render!
-  [app])
+  (let [global-handled (controller/handle-event (:global (:controller app))
+                                                event
+                                                (:model app))]
+    (assoc app :model global-handled)))
 
 (defn handle-input!
   [event app]
